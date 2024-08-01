@@ -8,8 +8,9 @@ class Customer extends Account {
     }
 
     async createBooking(slotId: number, startTime: Date, endTime: Date, totalPrice: number): Promise<void> {
-        if (!this.id) {
-            throw new Error('Customer ID is not set');
+        if (this.id === undefined) {
+            console.log('Customer ID is not set');
+            return;
         }
 
         const booking = new Booking(

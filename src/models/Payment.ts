@@ -36,7 +36,6 @@ class Payment {
             });
         } catch (error) {
             console.error('Error creating payment:', error);
-            throw new Error('Payment creation failed');
         }
     }
 }

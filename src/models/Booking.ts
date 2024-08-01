@@ -23,7 +23,7 @@ class Booking {
         try {
             await prisma.booking.create({
                 data: {
-                    customerId: this.customerId,  
+                    customerId: this.customerId,
                     slotId: this.slotId,
                     startTime: this.startTime,
                     endTime: this.endTime,
@@ -33,7 +33,6 @@ class Booking {
             });
         } catch (error) {
             console.error('Error saving booking:', error);
-            throw new Error('Booking creation failed');
         }
     }
 }

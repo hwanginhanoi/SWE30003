@@ -27,7 +27,6 @@ class Invoice {
             });
         } catch (error) {
             console.error('Error creating invoice:', error);
-            throw new Error('Invoice creation failed');
         }
     }
 }

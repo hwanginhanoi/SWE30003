@@ -25,7 +25,6 @@ class ParkingSlot {
             this.id = result.id;
         } catch (error) {
             console.error('Error saving parking slot:', error);
-            throw new Error('Failed to save parking slot');
         }
     }
 }
