@@ -1,12 +1,25 @@
-import Account from './Account'
-class Admin extends Account {
+import Account from './Account';
+import ParkingSlot from './ParkingSlot';
+import { SlotStatus, SlotType, Role } from "@prisma/client";
 
-    constructor()
-    constructor(name: String)
-    constructor(name: String, pwd: String)
-    constructor(name?: String,  pwd?: String) {
-        super(name, pwd, 'admin')
+class Admin extends Account {
+    constructor(name: string, email: string, password: string) {
+        super(name, email, password, Role.Admin);
+    }
+
+    async createParkingSlot(type: SlotType, status: SlotStatus) {
+        try {
+            const newSlot = new ParkingSlot(type, status);
+            await newSlot.save();
+            return {
+                success: true,
+                message: 'Parking slot created successfully',
+                data: newSlot,
+            };
+        } catch (error) {
+            console.error('Error creating parking slot:', error);
+        }
     }
 }
 
-export default Admin
+export default Admin;

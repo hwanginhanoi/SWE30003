@@ -1,29 +1,44 @@
-class Account {
-    public name: String | undefined
-    public role: String | undefined
-    private pwd: String | undefined
-    private ID: Number | undefined
+import { PrismaClient } from '@prisma/client';
+import { Role } from "@prisma/client";
 
-    constructor(name: String | undefined, pwd: String | undefined, user: string)
-    constructor(email: String)
-    constructor(name: String)
-    constructor(name: String,  pwd: String, role: String)
-    constructor(name?: String, pwd?: String, role?: String) {
-        this.pwd = pwd
-        this.name = name
-        this.role = role
+const prisma = new PrismaClient();
+
+abstract class Account {
+    public name: string;
+    public email: string;
+    public role: Role;
+    private readonly password: string;
+    protected id?: number;
+
+    protected constructor(name: string, email: string, password: string, role: Role) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.role = role;
     }
 
-    register() {
-        this.ID = Math.round(Math.random() * 10000)
-    }
-
-    getJsonObject(): Object {
+    getJsonObject(): object {
         return {
             name: this.name,
-            pwd: this.pwd,
+            email: this.email,
             role: this.role,
-            ID: this.ID
+            id: this.id
+        };
+    }
+
+    async register(): Promise<void> {
+        try {
+            const account = await prisma.account.create({
+                data: {
+                    name: this.name,
+                    email: this.email,
+                    password: this.password,
+                    role: this.role,
+                },
+            });
+            this.id = account.id;
+        } catch (error) {
+            console.error('Error registering account:', error);
         }
     }
 }

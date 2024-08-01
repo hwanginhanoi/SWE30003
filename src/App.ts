@@ -1,6 +1,6 @@
 import express from 'express';
 import * as bodyParser from 'body-parser';
-import indexRouter from './routes/index'
+import indexRouter from './routes/account'
 
 class App {
     public express

@@ -17,4 +17,4 @@ networks:
     driver: bridge
 
 volumes:
-  cos30043:
+  swe30003:

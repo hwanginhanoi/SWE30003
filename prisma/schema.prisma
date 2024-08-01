@@ -14,12 +14,100 @@ datasource db {
 }
 
 enum Role {
-  Admin
   Customer
+  Admin
 }
 
-model User {
-  id       Int    @id @default(autoincrement())
-  username String @unique
-  role     Role   @default(Customer)
+enum BookingStatus {
+  Pending
+  Confirmed
+  Cancelled
+  Completed
+}
+
+enum SlotType {
+  Car
+  Motorbike
+}
+
+enum SlotStatus {
+  Available
+  Occupied
+  Reserved
+}
+
+enum PaymentMethod {
+  Cash
+  CreditCard
+  EWallet
+}
+
+enum PaymentStatus {
+  Pending
+  Completed
+  Failed
+}
+
+enum NotificationType {
+  Push
+  Email
+}
+
+model Account {
+  id            Int            @id @default(autoincrement())
+  name          String
+  email         String         @unique
+  password      String
+  role          Role
+  bookings      Booking[]
+  notifications Notification[]
+}
+
+model Booking {
+  id          Int           @id @default(autoincrement())
+  customerId  Int
+  slotId      Int
+  startTime   DateTime
+  endTime     DateTime
+  totalPrice  Float
+  status      BookingStatus
+  customer    Account       @relation(fields: [customerId], references: [id])
+  parkingSlot ParkingSlot   @relation(fields: [slotId], references: [id])
+  invoice     Invoice?
+}
+
+model ParkingSlot {
+  id       Int        @id @default(autoincrement())
+  type     SlotType
+  status   SlotStatus
+  bookings Booking[]
+}
+
+model Invoice {
+  id        Int           @id @default(autoincrement())
+  bookingId Int           @unique
+  amount    Float
+  issueDate DateTime      @default(now())
+  status    PaymentStatus
+  booking   Booking       @relation(fields: [bookingId], references: [id])
+  payment   Payment?
+}
+
+model Payment {
+  id        Int           @id @default(autoincrement())
+  invoiceId Int           @unique
+  method    PaymentMethod
+  status    PaymentStatus
+  amount    Float
+  date      DateTime      @default(now())
+  invoice   Invoice       @relation(fields: [invoiceId], references: [id])
+}
+
+model Notification {
+  id        Int              @id @default(autoincrement())
+  accountId Int
+  type      NotificationType
+  message   String
+  createdAt DateTime         @default(now())
+  account   Account          @relation(fields: [accountId], references: [id])
 }

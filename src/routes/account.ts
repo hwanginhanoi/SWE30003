@@ -8,21 +8,35 @@ const router = express.Router();
 
 router.post('/register', (req, res) => {
     try {
-        let account: Account;
-        if (req.body.role === 'customer') {
-            account = new Customer(req.body.name, req.body.email, req.body.pwd);
-        } else {
-            account = new Admin(req.body.name, req.body.email, req.body.pwd);
+        const { name, password, email, role } = req.body;
+
+        if (!name || !password || !email || !role) {
+            JSONResponse.serverError(req, res, 'Missing required fields', null);
+            return;
         }
+
+        let account: Account;
+
+        if (role === 'customer') {
+            account = new Customer(name, email, password);
+        } else if (role === 'admin') {
+            account = new Admin(name, email, password);
+        } else {
+            JSONResponse.serverError(req, res, 'Invalid role specified', null);
+            return;
+        }
+
         account.register();
+
         JSONResponse.success(req, res, 'Account registered', account.getJsonObject());
     } catch (error) {
         if (error instanceof Error) {
             console.log(error.message, error.stack);
+            JSONResponse.serverError(req, res, error.message, null);
         } else {
             console.log('An unknown error occurred', error);
+            JSONResponse.serverError(req, res, 'An unknown error occurred', null);
         }
-        JSONResponse.serverError(req, res, null, null);
     }
 });
 

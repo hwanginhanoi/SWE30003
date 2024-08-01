@@ -13,7 +13,7 @@ class JSONResponse {
         });
     }
 
-    static serverError(req: Request<{}, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>, message: null, data: null) {
+    static serverError(req: Request<{}, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>, message: string, data: Object | null) {
         res.status(500).json({
             code: 500,
             message: message || 'internal server error',
