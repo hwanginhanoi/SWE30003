@@ -14,7 +14,7 @@ class ParkingSlot {
         this.id = id;
     }
 
-    async save(): Promise<void> {
+    async save(): Promise<boolean> {
         try {
             const result = await prisma.parkingSlot.create({
                 data: {
@@ -23,8 +23,10 @@ class ParkingSlot {
                 },
             });
             this.id = result.id;
+            return true;
         } catch (error) {
             console.error('Error saving parking slot:', error);
+            return false;
         }
     }
 }
