@@ -19,6 +19,7 @@ enum Role {
 }
 
 model User {
-  id       Int    @id @unique
+  id       Int    @id @default(autoincrement())
   username String @unique
+  role     Role   @default(Customer)
 }
