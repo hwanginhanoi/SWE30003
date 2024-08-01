@@ -1,6 +1,7 @@
 import express from 'express';
-import router from './routes/index'
 import * as bodyParser from 'body-parser';
+import indexRouter from './routes/index'
+
 class App {
     public express
     constructor() {
@@ -10,7 +11,7 @@ class App {
     }
 
     private loadRoutes(): void {
-        this.express.use('/', router);
+        this.express.use('/', indexRouter);
     }
 }
 

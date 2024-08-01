@@ -1,6 +1,6 @@
 import * as express from 'express';
 import Account from "../models/Account";
-import User from "../models/User";
+import Customer from "../models/Customer";
 import Admin from '../models/Admin';
 import JSONResponse from '../models/JSONResponse';
 
@@ -9,8 +9,8 @@ const router = express.Router();
 router.post('/register', (req, res) => {
     try {
         let account: Account;
-        if (req.body.role === 'user') {
-            account = new User(req.body.name, req.body.email, req.body.pwd);
+        if (req.body.role === 'customer') {
+            account = new Customer(req.body.name, req.body.email, req.body.pwd);
         } else {
             account = new Admin(req.body.name, req.body.email, req.body.pwd);
         }

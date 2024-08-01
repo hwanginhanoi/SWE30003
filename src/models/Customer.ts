@@ -1,5 +1,5 @@
 import Account from './Account'
-class User extends Account {
+class Customer extends Account {
 
     constructor()
     constructor(email: String)
@@ -10,4 +10,4 @@ class User extends Account {
     }
 }
 
-export default User
+export default Customer

@@ -6,7 +6,7 @@ class Admin extends Account {
     constructor(name: String, email: String)
     constructor(name: String, email: String, pwd: String)
     constructor(name?: String, email?: String, pwd?: String) {
-        super(name, email, pwd, 'user')
+        super(name, email, pwd, 'admin')
     }
 }
 
