@@ -17,6 +17,16 @@ class Admin extends Account {
         }
     }
 
+    public setName(name: string): void {
+        const slotManager = SlotManager.getInstance();
+        slotManager.setName(name);
+    }
+
+    public getName(): string {
+        const slotManager = SlotManager.getInstance();
+        return slotManager.getName();
+    }
+
 }
 
 export default Admin;

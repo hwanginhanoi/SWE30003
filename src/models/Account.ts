@@ -26,7 +26,7 @@ abstract class Account {
         };
     }
 
-    async register(): Promise<void> {
+    async register(): Promise<String> {
         try {
             const account = await prisma.account.create({
                 data: {
@@ -37,8 +37,10 @@ abstract class Account {
                 },
             });
             this.id = account.id;
+            return "success"
         } catch (error) {
             console.error('Error registering account:', error);
+            return "error"
         }
     }
 }

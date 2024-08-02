@@ -42,21 +42,4 @@ class EmailNotificationDecorator implements CustomNotification {
     }
 }
 
-class PushNotificationDecorator implements CustomNotification {
-    private wrapped: CustomNotification;
-
-    constructor(notification: CustomNotification) {
-        this.wrapped = notification;
-    }
-
-    send(message: string): void {
-        this.wrapped.send(message);
-        this.sendPush(message);
-    }
-
-    private sendPush(message: string): void {
-        console.log(`Sending Push Notification: ${message}`);
-    }
-}
-
-export { CustomNotification, BasicNotification, SMSNotificationDecorator, EmailNotificationDecorator, PushNotificationDecorator };
+export { CustomNotification, BasicNotification, SMSNotificationDecorator, EmailNotificationDecorator };

@@ -6,7 +6,7 @@ import JSONResponse from '../models/JSONResponse';
 
 const router = express.Router();
 
-router.post('/register', (req, res) => {
+router.post('/register', async (req, res) => {
     try {
         const { name, password, email, role } = req.body;
 
@@ -16,7 +16,6 @@ router.post('/register', (req, res) => {
         }
 
         let account: Account;
-
         if (role === 'customer') {
             account = new Customer(name, email, password);
         } else if (role === 'admin') {
@@ -26,7 +25,11 @@ router.post('/register', (req, res) => {
             return;
         }
 
-        account.register();
+        let result = await account.register();
+        if (result === 'error') {
+            JSONResponse.serverError(req, res, 'Error registering account', null);
+            return;
+        }
 
         JSONResponse.success(req, res, 'Account registered', account.getJsonObject());
     } catch (error) {
