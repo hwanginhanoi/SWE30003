@@ -3,7 +3,7 @@ import { Role } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-abstract class Account {
+abstract class User {
     public name: string;
     public email: string;
     public role: Role;
@@ -45,4 +45,4 @@ abstract class Account {
     }
 }
 
-export default Account;
+export default User;

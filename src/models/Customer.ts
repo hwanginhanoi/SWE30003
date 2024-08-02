@@ -1,8 +1,8 @@
-import Account from './Account';
+import User from './User';
 import { Role, BookingStatus } from "@prisma/client";
 import Booking from './Booking';
 
-class Customer extends Account {
+class Customer extends User {
     constructor(name: string, email: string, password: string) {
         super(name, email, password, Role.Customer);
     }
