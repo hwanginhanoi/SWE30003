@@ -1,22 +1,50 @@
-interface CustomNotification {
+class Booking implements INotifySubject {
+    list(INofifyObserver)
+
+    attach
+    detach
+    notifyAllObserver() {
+        for observer in this.list {
+            observer.send("booking info ")
+        }
+    }
+}
+
+interface INotifySubject {
+    attach(observer: INotifyObserver): void;
+    detach(observer: INotifyObserver): void;
+    notifyAllObserver(): void;
+}
+
+interface INotifyObserver {
     send(message: string): void;
 }
 
-class BasicNotification implements CustomNotification {
+class BasicNotification implements INotifyObserver {
     send(message: string): void {
-        console.log(`Sending notification: ${message}`);
+        console.log(`Sending push notification: ${message}`);
     }
 }
 
-class SMSNotificationDecorator implements CustomNotification {
-    private wrapped: CustomNotification;
+abstract class NotificationDecorator implements INotifyObserver {
+    protected observer: INotifyObserver;
 
-    constructor(notification: CustomNotification) {
-        this.wrapped = notification;
+    constructor(observer: INotifyObserver) {
+        this.observer = observer;
+    }
+
+    public send(message: string): void {
+        this.observer.send(message);
+    }
+}
+
+class SMSNotificationDecorator extends NotificationDecorator {
+    constructor(notification: INotifyObserver) {
+        super(notification)
     }
 
     send(message: string): void {
-        this.wrapped.send(message);
+        super.send(message);
         this.sendSMS(message);
     }
 
@@ -25,15 +53,13 @@ class SMSNotificationDecorator implements CustomNotification {
     }
 }
 
-class EmailNotificationDecorator implements CustomNotification {
-    private wrapped: CustomNotification;
-
-    constructor(notification: CustomNotification) {
-        this.wrapped = notification;
+class EmailNotificationDecorator extends NotificationDecorator  {
+    constructor(notification: INotifyObserver) {
+        super(notification)
     }
 
     send(message: string): void {
-        this.wrapped.send(message);
+        super.send(message);
         this.sendEmail(message);
     }
 
@@ -42,4 +68,4 @@ class EmailNotificationDecorator implements CustomNotification {
     }
 }
 
-export { CustomNotification, BasicNotification, SMSNotificationDecorator, EmailNotificationDecorator };
+export { INotifyObserver, BasicNotification, SMSNotificationDecorator, EmailNotificationDecorator };
