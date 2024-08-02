@@ -1,8 +1,8 @@
-import Account from './Account';
+import User from './User';
 import { Role, SlotStatus, SlotType } from "@prisma/client";
 import SlotManager from './SlotManager';
 
-class Admin extends Account {
+class Admin extends User {
     constructor(name: string, email: string, password: string) {
         super(name, email, password, Role.Admin);
     }

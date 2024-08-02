@@ -1,5 +1,5 @@
 import * as express from 'express';
-import Account from "../models/Account";
+import User from "../models/User";
 import Customer from "../models/Customer";
 import Admin from '../models/Admin';
 import JSONResponse from '../models/JSONResponse';
@@ -15,20 +15,20 @@ router.post('/register', (req, res) => {
             return;
         }
 
-        let account: Account;
+        let user: User;
 
         if (role === 'customer') {
-            account = new Customer(name, email, password);
+            user = new Customer(name, email, password);
         } else if (role === 'admin') {
-            account = new Admin(name, email, password);
+            user = new Admin(name, email, password);
         } else {
             JSONResponse.serverError(req, res, 'Invalid role specified', null);
             return;
         }
 
-        account.register();
+        user.register();
 
-        JSONResponse.success(req, res, 'Account registered', account.getJsonObject());
+        JSONResponse.success(req, res, 'Account registered', user.getJsonObject());
     } catch (error) {
         if (error instanceof Error) {
             console.log(error.message, error.stack);

@@ -53,7 +53,7 @@ enum NotificationType {
   Email
 }
 
-model Account {
+model User {
   id            Int            @id @default(autoincrement())
   name          String
   email         String         @unique
@@ -71,7 +71,7 @@ model Booking {
   endTime     DateTime
   totalPrice  Float
   status      BookingStatus
-  customer    Account       @relation(fields: [customerId], references: [id])
+  customer    User       @relation(fields: [customerId], references: [id])
   parkingSlot ParkingSlot   @relation(fields: [slotId], references: [id])
   invoice     Invoice?
 }
@@ -109,5 +109,5 @@ model Notification {
   type      NotificationType
   message   String
   createdAt DateTime         @default(now())
-  account   Account          @relation(fields: [accountId], references: [id])
+  account   User          @relation(fields: [accountId], references: [id])
 }
