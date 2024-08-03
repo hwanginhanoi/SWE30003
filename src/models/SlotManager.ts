@@ -1,10 +1,13 @@
 import {PrismaClient, SlotStatus, SlotType} from "@prisma/client";
 import ParkingSlot from "./ParkingSlot";
+
 const prisma = new PrismaClient();
+
 class SlotManager {
     private static instance: SlotManager;
 
-    private constructor() { }
+    private constructor() {
+    }
 
     public static getInstance(): SlotManager {
         if (!SlotManager.instance) {
@@ -23,21 +26,7 @@ class SlotManager {
         }
     }
 
-    static async getSlotById(id: number): Promise<ParkingSlot | Error> {
-        try {
-            const slot = await prisma.parkingSlot.findUnique({ where: { id: id } });
-            if (slot) {
-                return new ParkingSlot(slot.type, slot.status);
-            } else {
-                return new Error('Parking slot not found');
-            }
-
-        } catch (error) {
-            console.error('Error fetching parking slot:', error);
-            return new Error('Failed to fetch parking slot');
-        }
-    }
-    async upsertParkingSlot(parkingSlot : ParkingSlot): Promise<boolean> {
+    async upsertParkingSlot(parkingSlot: ParkingSlot): Promise<boolean> {
         try {
             const result = await prisma.parkingSlot.upsert({
                 where: {
@@ -59,8 +48,7 @@ class SlotManager {
         }
     }
 
-    async deleteParkingSlot(parkingSlot: ParkingSlot) : Promise<boolean>
-    {
+    async deleteParkingSlot(parkingSlot: ParkingSlot): Promise<boolean> {
         try {
             const result = await prisma.parkingSlot.delete({
                 where: {
@@ -73,7 +61,6 @@ class SlotManager {
             return false;
         }
     }
-
 
 
     // Add more methods for managing slots if needed
