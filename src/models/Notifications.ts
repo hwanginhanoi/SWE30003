@@ -1,4 +1,3 @@
-
 interface INotifySubject {
     attach(observer: INotifyObserver): void;
     detach(observer: INotifyObserver): void;
