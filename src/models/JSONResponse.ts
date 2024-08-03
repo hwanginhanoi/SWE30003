@@ -5,7 +5,7 @@ class JSONResponse {
     constructor() {
     }
 
-    static success(req: Request<{}, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>, message: string, data: Object) {
+    static success(req: Request<{}, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>, message: string, data: Object | null) {
         res.status(200).json({
             code: 200,
             message: message || 'success',

@@ -29,10 +29,9 @@ class Payment {
                 },
             });
 
-            // Update invoice status after payment
             await prisma.invoice.update({
                 where: { id: this.invoiceId },
-                data: { status: PaymentStatus.Completed },
+                    data: { status: PaymentStatus.Completed },
             });
         } catch (error) {
             console.error('Error creating payment:', error);
