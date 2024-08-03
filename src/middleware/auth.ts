@@ -14,7 +14,7 @@ export default async function authenticate(req: AuthenticatedRequest, res: Respo
         return
     }
 
-    jwt.verify(token, 'secretKey123cutephomaique', async (err: any, decoded: { id: number; email: string; }) => {
+    jwt.verify(token, 'secretKey123cutephomaique', async (err, decoded) => {
         if (err) {
             JSONResponse.serverError(req, res, 'Failed to authenticate token', null)
         }

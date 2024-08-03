@@ -78,9 +78,9 @@ abstract class User {
 
             if (user) {
                 if (user.role === Role.Customer) {
-                    return new Customer(user.name, user.email, ,user.id);
+                    return new Customer(user.name, user.email, user.password);
                 } else if (user.role === Role.Admin) {
-                    return new Admin(user.name, user.email, ,user.id);
+                    return new Admin(user.name, user.email, user.password);
                 }
             }
             return null;

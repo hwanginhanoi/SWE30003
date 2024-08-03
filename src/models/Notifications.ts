@@ -1,14 +1,3 @@
-class Booking implements INotifySubject {
-    list(INofifyObserver)
-
-    attach
-    detach
-    notifyAllObserver() {
-        for observer in this.list {
-            observer.send("booking info ")
-        }
-    }
-}
 
 interface INotifySubject {
     attach(observer: INotifyObserver): void;
