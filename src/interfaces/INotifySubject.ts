@@ -1,4 +1,4 @@
-import {INotifyObserver} from "./INotifyObserver";
+import INotifyObserver from "./INotifyObserver";
 
 interface INotifySubject {
     attach(observer: INotifyObserver): void;
