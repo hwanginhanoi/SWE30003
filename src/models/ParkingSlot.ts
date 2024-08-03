@@ -1,17 +1,15 @@
 import { PrismaClient } from '@prisma/client';
 import { SlotType, SlotStatus } from '@prisma/client';
 
-const prisma = new PrismaClient();
 
 class ParkingSlot {
-    public id?: number;
+    public id: number;
     public type: SlotType;
     public status: SlotStatus;
 
-    constructor(type: SlotType, status: SlotStatus, id?: number) {
+    constructor(type: SlotType, status: SlotStatus) {
         this.type = type;
         this.status = status;
-        this.id = id;
     }
 }
 
