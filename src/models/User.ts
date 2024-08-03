@@ -26,7 +26,7 @@ abstract class User {
         };
     }
 
-    async register(): Promise<String> {
+    async register(): Promise<Boolean> {
         try {
             const account = await prisma.user.create({
                 data: {
@@ -37,14 +37,14 @@ abstract class User {
                 },
             });
             this.id = account.id;
-            return "success"
+            return true
         } catch (error) {
             console.error('Error registering account:', error);
-            return "error"
+            return false
         }
     }
 
-    async login(email: string, password: string): Promise<String> {
+    async login(email: string, password: string): Promise<Boolean> {
         try {
             const account = await prisma.user.findUnique({
                 where: { email },
@@ -53,12 +53,12 @@ abstract class User {
             if (account && account.password === password) {
                 this.id = account.id;
                 this.name = account.name
-                return "success"
+                return true
             }
-            return "error";
+            return false;
         } catch (error) {
             console.error('Error during login:', error instanceof Error);
-            return "error";
+            return false;
         }
     }
 }

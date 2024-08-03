@@ -28,7 +28,7 @@ router.post('/register', async (req, res) => {
 
         let result = await user.register();
 
-        if (result === 'error') {
+        if (result === false) {
             JSONResponse.serverError(req, res, 'Error registering account', null);
             return;
         }
@@ -72,7 +72,7 @@ router.post('/login', async (req, res) => {
 
         let result = await user.login(email, password);
 
-        if (result === 'error') {
+        if (result === false) {
             JSONResponse.serverError(req, res, 'Error login account', null);
             return;
         } else {
