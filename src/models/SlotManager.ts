@@ -26,11 +26,31 @@ class SlotManager {
         }
     }
 
-    async upsertParkingSlot(parkingSlot: ParkingSlot): Promise<boolean> {
+    static async getSlotById(id: number): Promise<ParkingSlot | Error> {
+        try {
+            const slot = await prisma.parkingSlot.findUnique({
+                where: {id: id},
+            });
+            if (!slot) {
+                return Error("Slot not found");
+            }
+            else
+            {
+                return new ParkingSlot(slot.type, slot.status, slot.id);
+            }
+
+
+        } catch (error) {
+            console.error("Error fetching parking slot:", error);
+            return Error("Slot not found");
+        }
+    }
+
+    static async upsertParkingSlot(parkingSlot: ParkingSlot): Promise<boolean> {
         try {
             const result = await prisma.parkingSlot.upsert({
                 where: {
-                    id: parkingSlot.id
+                    id: parkingSlot.id || 0
                 },
                 update: {
                     type: parkingSlot.type,
@@ -48,11 +68,11 @@ class SlotManager {
         }
     }
 
-    async deleteParkingSlot(parkingSlot: ParkingSlot): Promise<boolean> {
+    static async deleteParkingSlot(parkingSlot: ParkingSlot): Promise<boolean> {
         try {
             const result = await prisma.parkingSlot.delete({
                 where: {
-                    id: parkingSlot.id,
+                    id: parkingSlot.id || 0,
                 },
             });
             return true;
