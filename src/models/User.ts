@@ -12,12 +12,11 @@ abstract class User {
     private readonly password: string;
     protected id?: number;
 
-    protected constructor(name: string, email: string, password: string, role: Role, id?: number) {
+    protected constructor(name: string, email: string, password: string, role: Role) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.role = role;
-        this.id = id;
     }
 
     getJsonObject(): object {
@@ -56,7 +55,7 @@ abstract class User {
             if (account && account.password === password) {
                 let user: User;
                 if (account.role === Role.Admin) {
-                    user = new Admin(account.name, account.email, account.password, account.id);
+                    user = new Admin(account.name, account.email, account.password);
                 } else {
                     user = new Customer(account.name, account.email, account.password);
                 }
@@ -70,6 +69,27 @@ abstract class User {
             return null;
         }
     }
+
+    static async findById(id: number): Promise<User | null> {
+        try {
+            const user = await prisma.user.findUnique({
+                where: { id },
+            });
+
+            if (user) {
+                if (user.role === Role.Customer) {
+                    return new Customer(user.name, user.email, ,user.id);
+                } else if (user.role === Role.Admin) {
+                    return new Admin(user.name, user.email, ,user.id);
+                }
+            }
+            return null;
+        } catch (error) {
+            console.error('Error finding user by ID:', error);
+            return null;
+        }
+    }
+
 }
 
 export default User;

@@ -1,8 +1,7 @@
-import jwt from "jsonwebtoken";
-import JSONResponse from "../models/JSONResponse";
+import { Request, Response, NextFunction } from 'express';
+import jwt from 'jsonwebtoken';
 import User from "../models/User";
-import {Request, Response, NextFunction} from 'express'
-import {syncBuiltinESMExports} from "node:module";
+import JSONResponse from '../models/JSONResponse';
 
 interface AuthenticatedRequest extends Request {
     user?: User
@@ -15,11 +14,25 @@ export default async function authenticate(req: AuthenticatedRequest, res: Respo
         return
     }
 
-    jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
+    jwt.verify(token, 'secretKey123cutephomaique', async (err: any, decoded: { id: number; email: string; }) => {
         if (err) {
             JSONResponse.serverError(req, res, 'Failed to authenticate token', null)
         }
 
-        const { id, email } = decoded as { id : number, email : string }
+        const { id, email } = decoded as { id: number; email: string };
+
+        try {
+            const user = await User.findById(id)
+            if (!user) {
+                JSONResponse.serverError(req, res, 'User not found', null);
+                return
+            }
+
+            req.user = user;
+            next()
+        } catch (error) {
+            console.log('Error handling user',error);
+            JSONResponse.serverError(req, res, 'Error finding user', null);
+        }
     });
 }
