@@ -1,7 +1,5 @@
 import { PrismaClient } from '@prisma/client';
 import { Role } from "@prisma/client";
-import Admin from "./Admin"
-import Customer from "./Customer";
 
 const prisma = new PrismaClient();
 
@@ -46,50 +44,23 @@ abstract class User {
         }
     }
 
-    static async login(email: string, password: string): Promise<User | null> {
+    async login(email: string, password: string): Promise<String> {
         try {
             const account = await prisma.user.findUnique({
                 where: { email },
             });
 
             if (account && account.password === password) {
-                let user: User;
-                if (account.role === Role.Admin) {
-                    user = new Admin(account.name, account.email, account.password);
-                } else {
-                    user = new Customer(account.name, account.email, account.password);
-                }
-
-                user.id = account.id;
-                return user;
+                this.id = account.id;
+                this.name = account.name
+                return "success"
             }
-            return null;
+            return "error";
         } catch (error) {
             console.error('Error during login:', error instanceof Error);
-            return null;
+            return "error";
         }
     }
-
-    static async findById(id: number): Promise<User | null> {
-        try {
-            const user = await prisma.user.findUnique({
-                where: { id },
-            });
-
-            if (user) {
-                if (user.role === Role.Customer) {
-                    return new Customer(user.name, user.email, user.password);
-                } else if (user.role === Role.Admin) {
-                    return new Admin(user.name, user.email, user.password);
-                }
-            }
-            return null;
-        } catch (error) {
-            console.error('Error finding user by ID:', error);
-            return null;
-        }
-    }
-
 }
 
 export default User;

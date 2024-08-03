@@ -1,9 +1,13 @@
 import * as express from 'express';
 import ParkingSlot from '../models/ParkingSlot';
 import JSONResponse from '../models/JSONResponse';
-import authenticate from '../middleware/authenticate';
+import authenticate from '../middleware/auth';
 
 const router = express.Router();
+
+router.get('/protected', authenticate, (req, res) => {
+    JSONResponse.success(req, res, 'Access granted to protected resource', "req");
+});
 
 router.get('/parkingSlot/:id', authenticate, async (req, res) => {
     const { id } = req.params;

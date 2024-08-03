@@ -1,6 +1,7 @@
 import express from 'express';
 import * as bodyParser from 'body-parser';
 import userRouter from './routes/user'
+import parkingSlot from "./routes/parkingSlot";
 
 class App {
     public express
@@ -11,8 +12,10 @@ class App {
         this.loadRoutes()
     }
 
+
     private loadRoutes(): void {
         this.express.use('/user', userRouter);
+        this.express.use('/parkingslot', parkingSlot)
     }
 
 }
