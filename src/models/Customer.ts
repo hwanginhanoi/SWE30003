@@ -22,7 +22,7 @@ class Customer extends User {
             BookingStatus.Pending
         );
 
-        await booking.save();
+        await booking.upsertBooking(booking);
     }
 }
 

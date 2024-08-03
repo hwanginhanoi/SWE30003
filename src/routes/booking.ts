@@ -8,26 +8,6 @@ import jwt from "jsonwebtoken";
 
 const router = express.Router();
 
-router.get('/read/:id', async (req, res) => {
-    const {id} = req.params;
-    if (!id) {
-        JSONResponse.serverError(req, res, 'Parking slot ID is required', null);
-        return;
-    }
-
-    const slotId = parseInt(id, 10);
-    if (isNaN(slotId)) {
-        JSONResponse.serverError(req, res, 'Invalid parking slot ID', null);
-        return;
-    }
-
-    const slot = await SlotManager.getSlotById(slotId);
-    if (slot instanceof Error) {
-        JSONResponse.serverError(req, res, slot.message, null);
-    } else {
-        JSONResponse.success(req, res, 'Parking slot found', slot);
-    }
-});
 
 router.post('/create/', async (req, res) => {
     const {type, status} = req.body;
