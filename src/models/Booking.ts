@@ -11,18 +11,19 @@ class Booking {
     public endTime: Date;
     public totalPrice: number;
     public status: BookingStatus;
-    public id: number;
+    public id?: number | null;
 
     private parkingLot: SlotManager = SlotManager.getInstance()
 
 
-    constructor(customerId: number, slotId: number, startTime: Date, endTime: Date, totalPrice: number, status: BookingStatus) {
+    constructor(customerId: number, slotId: number, startTime: Date, endTime: Date, totalPrice: number, status: BookingStatus, id? : number) {
         this.customerId = customerId;
         this.slotId = slotId;
         this.startTime = startTime;
         this.endTime = endTime;
         this.totalPrice = totalPrice;
         this.status = status;
+        this.id = id || null
     }
 
     static async getBookingsByUid(id: string): Promise<Booking[] | Error> {
@@ -38,7 +39,7 @@ class Booking {
         try {
             const result = await prisma.booking.upsert({
                 where: {
-                    id: booking.id
+                    id: booking.id || 0
                 },
                 update: {
                     customerId: booking.customerId,
@@ -68,7 +69,7 @@ class Booking {
         try {
             const result = await prisma.booking.delete({
                 where: {
-                    id: booking.id,
+                    id: booking.id || 0,
                 },
             });
             return true;
