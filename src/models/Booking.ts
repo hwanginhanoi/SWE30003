@@ -1,10 +1,12 @@
 import {PrismaClient, BookingStatus, PaymentStatus} from '@prisma/client';
 import SlotManager from './SlotManager';
-import Invoice from './Invoice'; // Ensure the path is correct
+import Invoice from './Invoice';
+import INotifySubject from "../interfaces/INotifySubject";
+import INotifyObserver from "../interfaces/INotifyObserver"; // Ensure the path is correct
 
 const prisma = new PrismaClient();
 
-class Booking {
+class Booking implements INotifySubject {
 
     public customerId: number;
     public slotId: number;
@@ -13,6 +15,7 @@ class Booking {
     public totalPrice: number;
     public status: BookingStatus;
     public id?: number | null;
+    private observers: INotifyObserver[] = [];
 
     private slotManager: SlotManager = SlotManager.getInstance()
 
@@ -96,6 +99,20 @@ class Booking {
         } catch (error) {
             console.error('Error delete parking slot:', error);
             return false;
+        }
+    }
+    attach(observer: INotifyObserver): void {
+        this.observers.push(observer);
+    }
+
+    detach(observer: INotifyObserver): void {
+        const observerIndex = this.observers.indexOf(observer);
+        this.observers.splice(observerIndex);
+    }
+
+    notifyAllObserver(): void {
+        for (const observer of this.observers) {
+            observer.send('Booking ID ${this.bookingId} has been updated to ${this.status}');
         }
     }
 }
