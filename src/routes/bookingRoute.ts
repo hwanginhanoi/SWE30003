@@ -21,10 +21,6 @@ router.post('/create/', async (req, res) => {
         JSONResponse.serverError(req, res, 'Error create booking', null);
         return;
     } else {
-        // const token = jwt.sign({ email: user.email }, 'secretKey123cutephomaique', {
-        //     expiresIn: '1h',
-        // });
-        // const credentials = user.getJsonObject()
         JSONResponse.success(req, res, 'Booking created', {});
     }
 });
@@ -42,7 +38,7 @@ router.delete('/delete/:id', async (req, res) => {
         return;
     }
 
-    const booking = await Booking.getBookingByUId(bookingId)
+    const booking = await Booking.getBookingById(bookingId)
     if (booking instanceof Booking) {
         const result = await Booking.deleteBooking(booking)
         if (result === false) {
