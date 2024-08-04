@@ -13,6 +13,8 @@ class App {
         this.express.use(bodyParser.json())
         this.express.use(cors());
         this.loadRoutes()
+
+        console.log('App started')
     }
 
     private loadRoutes(): void {
