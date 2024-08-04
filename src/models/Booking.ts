@@ -16,7 +16,7 @@ class Booking implements INotifySubject {
     public totalPrice: number;
     public status: BookingStatus;
     public id?: number | null;
-    private observers: INotifyObserver[] = [];
+    private observers: Array<INotifyObserver> = [];
 
     constructor(customerId: number, slotId: number, startTime: Date, endTime: Date, totalPrice: number, status: BookingStatus, id?: number) {
         this.customerId = customerId;
@@ -46,7 +46,7 @@ class Booking implements INotifySubject {
         }
     }
 
-    static async getSlotByUId(userId: number): Promise<Booking[] | Error> {
+    static async getBookingByUId(userId: number): Promise<Booking[] | Error> {
         try {
             const books = await prisma.booking.findMany({
                 where: {customerId: userId},
@@ -144,10 +144,12 @@ class Booking implements INotifySubject {
         this.observers.splice(observerIndex);
     }
 
-    notifyAllObserver(): void {
+    notifyAllObservers(message: string): { [key: string]: string } {
+        const result: { [key: string]: string } = {};
         for (const observer of this.observers) {
-            observer.send('Booking ID ${this.bookingId} has been updated to ${this.status}');
+            result[observer.getType()] = observer.send(message);
         }
+        return result;
     }
 }
 

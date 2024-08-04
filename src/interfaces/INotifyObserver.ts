@@ -1,5 +1,6 @@
 interface INotifyObserver {
-    send(message: string): void;
+    send(message: string): string;
+    getType(): string;
 }
 
 export default INotifyObserver;
