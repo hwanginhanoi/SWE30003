@@ -141,12 +141,15 @@ class Booking implements INotifySubject {
         try {
             if (booking.id) {
                 const delInvoice = Invoice.deleteInvoice(booking.id);
+                if (delInvoice == true) {
+                    const result = await prisma.booking.delete({
+                        where: {
+                            id: booking.id || 0,
+                        },
+                    });
+                }
             }
-            const result = await prisma.booking.delete({
-                where: {
-                    id: booking.id || 0,
-                },
-            });
+
 
             return true;
         } catch (error) {
