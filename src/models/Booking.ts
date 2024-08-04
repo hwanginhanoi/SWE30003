@@ -140,8 +140,8 @@ class Booking implements INotifySubject {
     static async deleteBooking(booking: Booking): Promise<boolean> {
         try {
             if (booking.id) {
-                const delInvoice = Invoice.deleteInvoice(booking.id);
-                if (delInvoice == true) {
+                const delInvoice = await Invoice.deleteInvoice(booking.id);
+                if (delInvoice) {
                     const result = await prisma.booking.delete({
                         where: {
                             id: booking.id || 0,
@@ -149,8 +149,6 @@ class Booking implements INotifySubject {
                     });
                 }
             }
-
-
             return true;
         } catch (error) {
             console.error('Error delete parking slot:', error);
