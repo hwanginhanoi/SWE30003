@@ -1,4 +1,4 @@
-import {PrismaClient, PaymentMethod, PaymentStatus, Invoice, SlotStatus} from '@prisma/client';
+import {PrismaClient, PaymentMethod, PaymentStatus, Invoice, SlotStatus, BookingStatus} from '@prisma/client';
 import Receipt from './Receipt';
 
 const prisma = new PrismaClient();
@@ -45,7 +45,7 @@ class PaymentService {
 
             await prisma.booking.update({
                 where: { id: invoice.bookingId },
-                data: { status: PaymentStatus.Completed },
+                data: { status: BookingStatus.Confirmed },
             });
 
 
