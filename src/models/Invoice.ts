@@ -1,4 +1,4 @@
-import { PrismaClient, PaymentStatus } from '@prisma/client';
+import {PrismaClient, PaymentStatus} from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -27,6 +27,20 @@ class Invoice {
             });
         } catch (error) {
             console.error('Error creating invoice:', error);
+        }
+    }
+
+    static async deleteInvoice(bookingId: number): Promise<boolean> {
+        try {
+            const result = await prisma.invoice.delete({
+                where: {
+                    bookingId: bookingId,
+                },
+            });
+            return true;
+        } catch (error) {
+            console.error('Error delete invoice:', error);
+            return false;
         }
     }
 }

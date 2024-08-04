@@ -68,7 +68,7 @@ class Booking implements INotifySubject {
             if (!booking) {
                 return Error("Booking not found");
             } else {
-                return new Booking(booking.customerId, booking.slotId, booking.startTime, booking.endTime, booking.totalPrice, booking.status);
+                return new Booking(booking.customerId, booking.slotId, booking.startTime, booking.endTime, booking.totalPrice, booking.status, booking.id);
             }
 
 
@@ -94,28 +94,41 @@ class Booking implements INotifySubject {
         }
     }
 
-    static async upsertBooking(booking: Booking): Promise<boolean> {
+    static async insertBooking(booking: Booking): Promise<boolean> {
         try {
-            const result = await prisma.booking.upsert({
+            const book = await prisma.booking.create({
+                data: {
+                    customerId: booking.customerId,
+                    slotId: booking.slotId,
+                    startTime: booking.startTime,
+                    endTime: booking.endTime,
+                    totalPrice: booking.totalPrice,
+                    status: booking.status,
+                },
+            });
+            const invoice = new Invoice(book.id, booking.totalPrice, new Date(), PaymentStatus.Pending);
+            await invoice.save();
+            return true;
+        } catch (error) {
+            console.error('Error upsert booking:', error);
+            return false;
+        }
+    }
+
+    static async updateBooking(booking: Booking): Promise<boolean> {
+        try {
+            const result = await prisma.booking.update({
                 where: {
                     id: booking.id || 0
                 },
-                update: {
+                data: {
                     customerId: booking.customerId,
                     slotId: booking.slotId,
                     startTime: booking.startTime,
                     endTime: booking.endTime,
                     totalPrice: booking.totalPrice,
                     status: booking.status,
-                },
-                create: {
-                    customerId: booking.customerId,
-                    slotId: booking.slotId,
-                    startTime: booking.startTime,
-                    endTime: booking.endTime,
-                    totalPrice: booking.totalPrice,
-                    status: booking.status,
-                },
+                }
             });
             return true;
         } catch (error) {
@@ -126,11 +139,15 @@ class Booking implements INotifySubject {
 
     static async deleteBooking(booking: Booking): Promise<boolean> {
         try {
+            if (booking.id) {
+                const delInvoice = Invoice.deleteInvoice(booking.id);
+            }
             const result = await prisma.booking.delete({
                 where: {
                     id: booking.id || 0,
                 },
             });
+
             return true;
         } catch (error) {
             console.error('Error delete parking slot:', error);

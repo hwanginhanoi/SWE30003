@@ -13,7 +13,7 @@ const router = express.Router();
 router.post('/create/', async (req, res) => {
     const {customerId, slotId, startTime, endTime, totalPrice, status} = req.body;
     const booking: Booking = new Booking(customerId, slotId, startTime, endTime, totalPrice, status)
-    const result = await Booking.upsertBooking(booking)
+    const result = await Booking.insertBooking(booking)
 
 
     if (result === false) {
@@ -73,7 +73,7 @@ router.get('/update/:id', async (req, res) => {
     }
     const booking = await Booking.getSlotById(bookingId)
     if (booking instanceof Booking) {
-        const result = await Booking.upsertBooking(booking)
+        const result = await Booking.updateBooking(booking)
         if (result === false) {
             JSONResponse.serverError(req, res, 'Error update booking', null);
             return;
@@ -102,7 +102,27 @@ router.get('/getByUId/:id', async (req, res) => {
         return;
     }
     const books = await Booking.getSlotByUId(userId)
-    if (books instanceof Booking) {
+    if(books) {
+        JSONResponse.success(req, res, 'Booking list:', books);
+    } else {
+        JSONResponse.serverError(req, res, 'Error update booking version 2', null);
+    }
+});
+
+router.get('/getById/:id', async (req, res) => {
+    const {id} = req.params;
+    if (!id) {
+        JSONResponse.serverError(req, res, 'User ID is required', null);
+        return;
+    }
+
+    const bookingId = parseInt(id, 10);
+    if (isNaN(bookingId)) {
+        JSONResponse.serverError(req, res, 'User booking ID', null);
+        return;
+    }
+    const books = await Booking.getSlotById(bookingId)
+    if(books) {
         JSONResponse.success(req, res, 'Booking list:', books);
     } else {
         JSONResponse.serverError(req, res, 'Error update booking version 2', null);
