@@ -31,35 +31,6 @@ class Booking implements INotifySubject {
         this.id = id || null
     }
 
-    async save(): Promise<Invoice | null> {
-        try {
-            const slot = await this.slotManager
-
-            if (!slot) {
-                console.error('Slot not found');
-                return null;
-            }
-
-            const booking = await prisma.booking.create({
-                data: {
-                    customerId: this.customerId,
-                    slotId: this.slotId,
-                    startTime: this.startTime,
-                    endTime: this.endTime,
-                    totalPrice: this.totalPrice,
-                    status: this.status,
-                },
-            });
-
-            const invoice = new Invoice(booking.id, this.totalPrice, new Date(), PaymentStatus.Pending);
-            await invoice.save();
-            return invoice;
-        } catch (error) {
-            console.error('Error saving booking:', error);
-            return null
-        }
-    }
-
     static async getSlotById(id: number): Promise<Booking | Error> {
         try {
             const booking = await prisma.booking.findUnique({
@@ -107,7 +78,7 @@ class Booking implements INotifySubject {
                 },
             });
             const invoice = new Invoice(book.id, booking.totalPrice, new Date(), PaymentStatus.Pending);
-            await invoice.save();
+            await invoice.createInvoice();
             return true;
         } catch (error) {
             console.error('Error upsert booking:', error);

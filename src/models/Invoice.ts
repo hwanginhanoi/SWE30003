@@ -15,7 +15,7 @@ class Invoice {
         this.status = status;
     }
 
-    async save(): Promise<void> {
+    async createInvoice(): Promise<void> {
         try {
             await prisma.invoice.create({
                 data: {
