@@ -6,6 +6,7 @@ import parkingSlot from "./routes/parkingRoute";
 import bookingRouter from './routes/bookingRoute';
 import paymentRouter from './routes/paymentRoute';
 import invoiceRouter from './routes/invoiceRoute';
+import receiptRoute from "./routes/receiptRoute";
 
 
 class App {
@@ -25,7 +26,7 @@ class App {
         this.express.use('/parkingslot', parkingSlot)
         this.express.use('/booking', bookingRouter);
         this.express.use('/payment', paymentRouter);
-        this.express.use('/receipt', paymentRouter);
+        this.express.use('/receipt', receiptRoute);
         this.express.use('/invoice', invoiceRouter);
     }
 
