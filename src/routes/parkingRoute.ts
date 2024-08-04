@@ -8,6 +8,19 @@ import jwt from "jsonwebtoken";
 
 const router = express.Router();
 
+router.get('/read/all', authenticate, async (req, res) => {
+    try {
+        const slots = await SlotManager.getAllSlot();
+        if (slots instanceof Error) {
+            JSONResponse.serverError(req, res, slots.message, null);
+        } else {
+            JSONResponse.success(req, res, 'Parking slots fetched successfully', slots);
+        }
+    } catch (error) {
+        JSONResponse.serverError(req, res, 'An unexpected error occurred', null);
+    }
+});
+
 router.get('/read/:id', async (req, res) => {
     const {id} = req.params;
     if (!id) {
@@ -29,11 +42,10 @@ router.get('/read/:id', async (req, res) => {
     }
 });
 
-router.post('/create/', async (req, res) => {
+router.post('/create', async (req, res) => {
     const {type, status} = req.body;
     const parkingSlot: ParkingSlot = new ParkingSlot(type, status)
     const result = await SlotManager.upsertParkingSlot(parkingSlot)
-
 
     if (!result) {
         JSONResponse.serverError(req, res, 'Error create booking', null);

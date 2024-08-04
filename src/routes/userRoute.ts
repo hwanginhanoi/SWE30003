@@ -81,7 +81,7 @@ router.post('/login', async (req, res) => {
             const token = jwt.sign({email: user.email}, 'secretKey123cutephomaique', {
                 expiresIn: '1h',
             });
-            JSONResponse.success(req, res, 'Account registered', {user: credentials, token});
+            JSONResponse.success(req, res, 'Login successful', {user: credentials, token});
         }
 
     } catch (error) {

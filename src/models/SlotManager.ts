@@ -19,7 +19,7 @@ class SlotManager {
     static async getAllSlot(): Promise<ParkingSlot[] | Error> {
         try {
             const slots = await prisma.parkingSlot.findMany();
-            return slots.map(slot => new ParkingSlot(slot.type, slot.status));
+            return slots.map(slot => new ParkingSlot(slot.type, slot.status, slot.id));
         } catch (error) {
             console.error('Error fetching parking slots:', error);
             return Error('Failed to fetch parking slots');
