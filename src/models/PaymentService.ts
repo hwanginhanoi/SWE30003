@@ -43,6 +43,12 @@ class PaymentService {
                 data: { status: PaymentStatus.Completed },
             });
 
+            await prisma.booking.update({
+                where: { id: invoice.bookingId },
+                data: { status: PaymentStatus.Completed },
+            });
+
+
             await prisma.parkingSlot.update({
                 where: { id: invoice.booking.parkingSlot.id },
                 data: { status: SlotStatus.Occupied },
