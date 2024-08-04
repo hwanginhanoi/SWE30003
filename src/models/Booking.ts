@@ -28,7 +28,7 @@ class Booking implements INotifySubject {
         this.id = id || null
     }
 
-    static async getSlotById(id: number): Promise<Booking | Error> {
+    static async getBookingById(id: number): Promise<Booking | Error> {
         try {
             const booking = await prisma.booking.findUnique({
                 where: {id: id},
