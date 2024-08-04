@@ -16,24 +16,8 @@ router.post('/process', async (req: Request, res: Response) => {
 
     const message: string = `Your payment successfully. `
     const pushNotification = new PushNotification()
-    const receipt = new Receipt.getReceiptsByInvoiceId(invoiceId)
-    if (receipt instanceof Receipt) {
-        receipt.attach(pushNotification);
+    const receipt = Receipt.getReceiptsByInvoiceId(invoiceId)
 
-        if (email) {
-            const emailNotificationObserver = new EmailNotification()
-            receipt.attach(emailNotificationObserver);
-        }
-        if (sms) {
-            const smsNotificationObserver = new SMSNotification()
-            receipt.attach(smsNotificationObserver);
-        }
-        const notificaion: { [key: string]: string } = receipt.notifyAllObservers(message)
-
-
-        JSONResponse.success(req, res, 'Payment success', notificaion);
-
-    }
 
     if (!invoiceId) {
         JSONResponse.serverError(req, res, 'Missing required fields', null);
@@ -41,8 +25,24 @@ router.post('/process', async (req: Request, res: Response) => {
 
     try {
         await paymentService.processPayment(invoiceId, amount, method as PaymentMethod);
-        JSONResponse.success(req, res, 'Payment processed', null);
 
+        if (receipt instanceof Receipt) {
+            receipt.attach(pushNotification);
+
+            if (email) {
+                const emailNotificationObserver = new EmailNotification()
+                receipt.attach(emailNotificationObserver);
+            }
+            if (sms) {
+                const smsNotificationObserver = new SMSNotification()
+                receipt.attach(smsNotificationObserver);
+            }
+            const notificaion: { [key: string]: string } = receipt.notifyAllObservers(message)
+
+
+            JSONResponse.success(req, res, 'Payment success', notificaion);
+
+        }
     } catch (error) {
         console.error('Error processing payment:', error);
         JSONResponse.serverError(req, res, 'Failed to process payment', null);

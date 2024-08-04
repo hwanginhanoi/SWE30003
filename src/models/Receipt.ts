@@ -74,11 +74,15 @@ class Receipt implements INotifySubject {
 
     static async getReceiptsByInvoiceId(invoiceId: number): Promise<Receipt | Error> {
         try {
-            return await prisma.receipt.findUnique({
+            const receipt=  await prisma.receipt.findUnique({
                 where: {
                     invoiceId: invoiceId
                 }
             });
+            if (receipt) {
+                return new Receipt(receipt.id, receipt.invoiceId, receipt.method, receipt.status, receipt.amount, receipt.date)
+            } else
+                return Error("Can not get receipt")
         } catch (error) {
             console.error('Error fetching receipts:', error);
             return Error("Error fetching receipt");
