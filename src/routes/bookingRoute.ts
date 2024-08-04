@@ -28,7 +28,7 @@ router.post('/create/', async (req, res) => {
     }
 });
 
-router.get('/delete/:id', async (req, res) => {
+router.delete('/delete/:id', async (req, res) => {
     const {id} = req.params;
     if (!id) {
         JSONResponse.serverError(req, res, 'Parking slot ID is required', null);
