@@ -1,10 +1,11 @@
 import {PaymentMethod, PaymentStatus, PrismaClient} from '@prisma/client';
 import INotifySubject from "../interfaces/INotifySubject";
 import INotifyObserver from "../interfaces/INotifyObserver";
+import invoice from "./Invoice";
 
 const prisma = new PrismaClient();
 
-class Receipt implements INotifySubject{
+class Receipt implements INotifySubject {
     public id: number;
     public invoiceId: number;
     public method: PaymentMethod;
@@ -68,6 +69,19 @@ class Receipt implements INotifySubject{
         } catch (error) {
             console.error('Error fetching receipts:', error);
             return null;
+        }
+    }
+
+    static async getReceiptsByInvoiceId(invoiceId: number): Promise<Receipt | Error> {
+        try {
+            return await prisma.receipt.findUnique({
+                where: {
+                    invoiceId: invoiceId
+                }
+            });
+        } catch (error) {
+            console.error('Error fetching receipts:', error);
+            return Error("Error fetching receipt");
         }
     }
 

@@ -24,6 +24,7 @@ class App {
         this.express.use('/parkingslot', parkingSlot)
         this.express.use('/booking', bookingRouter);
         this.express.use('/payment', paymentRouter);
+        this.express.use('/receipt', paymentRouter);
     }
 
 }
