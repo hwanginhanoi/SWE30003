@@ -7,12 +7,14 @@ class Invoice {
     public amount: number;
     public issueDate: Date;
     public status: PaymentStatus;
+    public id?: number | null;
 
-    constructor(bookingId: number, amount: number, issueDate: Date, status: PaymentStatus) {
-        this.bookingId = bookingId;
+    constructor(invoiceId: number, amount: number, issueDate: Date, status: PaymentStatus, id?: number) {
+        this.bookingId = invoiceId;
         this.amount = amount;
         this.issueDate = issueDate;
         this.status = status;
+        this.id = id;
     }
 
     async createInvoice(): Promise<void> {
@@ -30,17 +32,46 @@ class Invoice {
         }
     }
 
-    static async deleteInvoice(bookingId: number): Promise<boolean> {
+    static async deleteInvoice(invoiceId: number): Promise<boolean> {
         try {
             await prisma.invoice.delete({
                 where: {
-                    bookingId: bookingId,
+                    id: invoiceId,
                 },
             });
             return true;
         } catch (error) {
             console.error('Error delete invoice:', error);
             return false;
+        }
+    }
+
+    static async getBookingByUId(userId: number): Promise<Invoice[] | Error> {
+        try {
+            const bookings = await prisma.booking.findMany({
+                where: { customerId: userId },
+                select: { id: true },
+            });
+
+            if (bookings.length === 0) {
+                return new Error('No bookings found for this user ID');
+            }
+
+            const bookingIds = bookings.map(booking => booking.id);
+
+
+            const invoices = await prisma.invoice.findMany({
+                where: { bookingId: { in: bookingIds } },
+            });
+
+            if (!invoices) {
+                return Error("Booking not found");
+            } else {
+                return invoices.map(invoice => new Invoice(invoice.bookingId, invoice.amount, invoice.issueDate, invoice.status, invoice.id));
+            }
+        } catch (error) {
+            console.error("Error fetching invoice:", error);
+            return Error("Booking not found");
         }
     }
 }
