@@ -54,7 +54,7 @@ class Booking implements INotifySubject {
             if (!books) {
                 return Error("Booking not found");
             } else {
-                return books.map(booking => new Booking(booking.customerId, booking.slotId, booking.startTime, booking.endTime, booking.totalPrice, booking.status));
+                return books.map(booking => new Booking(booking.customerId, booking.slotId, booking.startTime, booking.endTime, booking.totalPrice, booking.status, booking.id));
             }
         } catch (error) {
             console.error("Error fetching booking:", error);
@@ -78,8 +78,8 @@ class Booking implements INotifySubject {
             await invoice.createInvoice();
 
             await prisma.parkingSlot.update({
-                where: { id: booking.slotId },
-                data: { status: SlotStatus.Reserved },
+                where: {id: booking.slotId},
+                data: {status: SlotStatus.Reserved},
             });
 
             return true;
@@ -123,8 +123,8 @@ class Booking implements INotifySubject {
                     });
                 }
                 await prisma.parkingSlot.update({
-                    where: { id: booking.slotId },
-                    data: { status: SlotStatus.Available },
+                    where: {id: booking.slotId},
+                    data: {status: SlotStatus.Available},
                 });
 
             }
