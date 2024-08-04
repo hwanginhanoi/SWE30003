@@ -101,10 +101,10 @@ router.get('/update/:id', async (req, res) => {
             //     expiresIn: '1h',
             // });
             // const credentials = user.getJsonObject()
-            JSONResponse.success(req, res, 'Booking deleted', {});
+            JSONResponse.success(req, res, 'Parking slot deleted', {});
         }
     } else {
-        JSONResponse.serverError(req, res, 'Error update booking version 2', null);
+        JSONResponse.serverError(req, res, 'Error update parking slot version 2', null);
     }
 });
 

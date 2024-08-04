@@ -2,7 +2,8 @@ import {PrismaClient, BookingStatus, PaymentStatus} from '@prisma/client';
 import SlotManager from './SlotManager';
 import Invoice from './Invoice';
 import INotifySubject from "../interfaces/INotifySubject";
-import INotifyObserver from "../interfaces/INotifyObserver"; // Ensure the path is correct
+import INotifyObserver from "../interfaces/INotifyObserver";
+import ParkingSlot from "./ParkingSlot"; // Ensure the path is correct
 
 const prisma = new PrismaClient();
 
@@ -20,7 +21,7 @@ class Booking implements INotifySubject {
     private slotManager: SlotManager = SlotManager.getInstance()
 
 
-    constructor(customerId: number, slotId: number, startTime: Date, endTime: Date, totalPrice: number, status: BookingStatus, id? : number) {
+    constructor(customerId: number, slotId: number, startTime: Date, endTime: Date, totalPrice: number, status: BookingStatus, id?: number) {
         this.customerId = customerId;
         this.slotId = slotId;
         this.startTime = startTime;
@@ -58,7 +59,42 @@ class Booking implements INotifySubject {
             return null
         }
     }
-    async upsertBooking(booking : Booking): Promise<boolean> {
+
+    static async getSlotById(id: number): Promise<Booking | Error> {
+        try {
+            const booking = await prisma.booking.findUnique({
+                where: {id: id},
+            });
+            if (!booking) {
+                return Error("Booking not found");
+            } else {
+                return new Booking(booking.customerId, booking.slotId, booking.startTime, booking.endTime, booking.totalPrice, booking.status);
+            }
+
+
+        } catch (error) {
+            console.error("Error fetching parking slot:", error);
+            return Error("Slot not found");
+        }
+    }
+
+    static async getSlotByUId(userId: number): Promise<Booking[] | Error> {
+        try {
+            const books = await prisma.booking.findMany({
+                where: {customerId: userId},
+            });
+            if (!books) {
+                return Error("Booking not found");
+            } else {
+                return books.map(booking => new Booking(booking.customerId, booking.slotId, booking.startTime, booking.endTime, booking.totalPrice, booking.status));
+            }
+        } catch (error) {
+            console.error("Error fetching booking:", error);
+            return Error("Booking not found");
+        }
+    }
+
+    static async upsertBooking(booking: Booking): Promise<boolean> {
         try {
             const result = await prisma.booking.upsert({
                 where: {
@@ -87,8 +123,8 @@ class Booking implements INotifySubject {
             return false;
         }
     }
-    async deleteBooking(booking: Booking) : Promise<boolean>
-    {
+
+    static async deleteBooking(booking: Booking): Promise<boolean> {
         try {
             const result = await prisma.booking.delete({
                 where: {
@@ -101,6 +137,7 @@ class Booking implements INotifySubject {
             return false;
         }
     }
+
     attach(observer: INotifyObserver): void {
         this.observers.push(observer);
     }
