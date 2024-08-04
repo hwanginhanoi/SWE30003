@@ -1,4 +1,4 @@
-import { PrismaClient, PaymentMethod, PaymentStatus, Invoice } from '@prisma/client';
+import {PrismaClient, PaymentMethod, PaymentStatus, Invoice, SlotStatus} from '@prisma/client';
 import Receipt from './Receipt';
 
 const prisma = new PrismaClient();
@@ -19,6 +19,13 @@ class PaymentService {
         try {
             const invoice = await prisma.invoice.findUnique({
                 where: { id: invoiceId },
+                include: {
+                    booking: {
+                        include: {
+                            parkingSlot: true,
+                        },
+                    },
+                },
             });
 
             if (!invoice) {
@@ -34,6 +41,11 @@ class PaymentService {
             await prisma.invoice.update({
                 where: { id: invoiceId },
                 data: { status: PaymentStatus.Completed },
+            });
+
+            await prisma.parkingSlot.update({
+                where: { id: invoice.booking.parkingSlot.id },
+                data: { status: SlotStatus.Occupied },
             });
 
             const receipt = await Receipt.createReceipt(invoiceId, method, amount);

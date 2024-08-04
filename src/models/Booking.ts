@@ -1,4 +1,4 @@
-import {PrismaClient, BookingStatus, PaymentStatus} from '@prisma/client';
+import {PrismaClient, BookingStatus, PaymentStatus, SlotStatus} from '@prisma/client';
 import SlotManager from './SlotManager';
 import Invoice from './Invoice';
 import INotifySubject from "../interfaces/INotifySubject";
@@ -17,9 +17,6 @@ class Booking implements INotifySubject {
     public status: BookingStatus;
     public id?: number | null;
     private observers: INotifyObserver[] = [];
-
-    private slotManager: SlotManager = SlotManager.getInstance()
-
 
     constructor(customerId: number, slotId: number, startTime: Date, endTime: Date, totalPrice: number, status: BookingStatus, id?: number) {
         this.customerId = customerId;
@@ -79,6 +76,12 @@ class Booking implements INotifySubject {
             });
             const invoice = new Invoice(book.id, booking.totalPrice, new Date(), PaymentStatus.Pending);
             await invoice.createInvoice();
+
+            await prisma.parkingSlot.update({
+                where: { id: booking.slotId },
+                data: { status: SlotStatus.Reserved },
+            });
+
             return true;
         } catch (error) {
             console.error('Error upsert booking:', error);
@@ -119,6 +122,11 @@ class Booking implements INotifySubject {
                         },
                     });
                 }
+                await prisma.parkingSlot.update({
+                    where: { id: booking.slotId },
+                    data: { status: SlotStatus.Available },
+                });
+
             }
             return true;
         } catch (error) {

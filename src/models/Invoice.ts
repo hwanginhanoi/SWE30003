@@ -32,7 +32,7 @@ class Invoice {
 
     static async deleteInvoice(bookingId: number): Promise<boolean> {
         try {
-            const result = await prisma.invoice.delete({
+            await prisma.invoice.delete({
                 where: {
                     bookingId: bookingId,
                 },

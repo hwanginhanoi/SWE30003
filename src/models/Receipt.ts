@@ -1,4 +1,4 @@
-import { PrismaClient, PaymentMethod, PaymentStatus } from '@prisma/client';
+import {PaymentMethod, PaymentStatus, PrismaClient} from '@prisma/client';
 import INotifySubject from "../interfaces/INotifySubject";
 import INotifyObserver from "../interfaces/INotifyObserver";
 
@@ -29,7 +29,7 @@ class Receipt implements INotifySubject{
                     invoiceId,
                     method,
                     amount,
-                    status: PaymentStatus.Pending, // default status
+                    status: PaymentStatus.Completed,
                 },
             });
 
@@ -47,47 +47,26 @@ class Receipt implements INotifySubject{
         }
     }
 
-    static async updateReceiptStatus(id: number, status: PaymentStatus): Promise<Receipt | null> {
+    static async getReceiptsByUserId(userId: number) {
         try {
-            const updatedReceipt = await prisma.receipt.update({
-                where: { id },
-                data: { status },
+            return await prisma.receipt.findMany({
+                where: {
+                    invoice: {
+                        booking: {
+                            customerId: userId,
+                        },
+                    },
+                },
+                include: {
+                    invoice: {
+                        include: {
+                            booking: true,
+                        },
+                    },
+                },
             });
-
-            return new Receipt(
-                updatedReceipt.id,
-                updatedReceipt.invoiceId,
-                updatedReceipt.method,
-                updatedReceipt.status,
-                updatedReceipt.amount,
-                updatedReceipt.date
-            );
         } catch (error) {
-            console.error('Error updating receipt status:', error);
-            return null;
-        }
-    }
-
-    static async getReceiptById(id: number): Promise<Receipt | null> {
-        try {
-            const receipt = await prisma.receipt.findUnique({
-                where: { id },
-            });
-
-            if (receipt) {
-                return new Receipt(
-                    receipt.id,
-                    receipt.invoiceId,
-                    receipt.method,
-                    receipt.status,
-                    receipt.amount,
-                    receipt.date
-                );
-            } else {
-                return null;
-            }
-        } catch (error) {
-            console.error('Error fetching receipt by ID:', error);
+            console.error('Error fetching receipts:', error);
             return null;
         }
     }

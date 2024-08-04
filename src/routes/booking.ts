@@ -48,10 +48,6 @@ router.get('/delete/:id', async (req, res) => {
             JSONResponse.serverError(req, res, 'Error delete booking', null);
             return;
         } else {
-            // const token = jwt.sign({ email: user.email }, 'secretKey123cutephomaique', {
-            //     expiresIn: '1h',
-            // });
-            // const credentials = user.getJsonObject()
             JSONResponse.success(req, res, 'Booking deleted', {});
         }
     } else {

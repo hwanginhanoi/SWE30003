@@ -3,6 +3,7 @@ import * as bodyParser from 'body-parser';
 import userRouter from './routes/user'
 import parkingSlot from "./routes/parkingSlot";
 import bookingRouter from './routes/booking';
+import paymentRouter from './routes/paymentRoute';
 
 class App {
     public express
@@ -18,6 +19,7 @@ class App {
         this.express.use('/user', userRouter);
         this.express.use('/parkingslot', parkingSlot)
         this.express.use('/booking', bookingRouter);
+        this.express.use('/payment', paymentRouter);
     }
 
 }
