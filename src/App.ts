@@ -1,8 +1,8 @@
 import express from 'express';
 import * as bodyParser from 'body-parser';
-import userRouter from './routes/user'
-import parkingSlot from "./routes/parkingSlot";
-import bookingRouter from './routes/booking';
+import userRouter from './routes/userRoute'
+import parkingSlot from "./routes/parkingRoute";
+import bookingRouter from './routes/bookingRoute';
 
 class App {
     public express
