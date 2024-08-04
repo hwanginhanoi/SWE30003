@@ -11,6 +11,8 @@ class App {
         this.express = express()
         this.express.use(bodyParser.json())
         this.loadRoutes()
+
+        console.log('App started')
     }
 
 

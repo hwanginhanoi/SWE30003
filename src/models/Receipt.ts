@@ -11,7 +11,7 @@ class Receipt implements INotifySubject{
     public status: PaymentStatus;
     public amount: number;
     public date: Date;
-    private observers: INotifyObserver[] = [];
+    private observers: Array<INotifyObserver> = [];
 
     constructor(id: number, invoiceId: number, method: PaymentMethod, status: PaymentStatus, amount: number, date: Date) {
         this.id = id;
@@ -101,10 +101,12 @@ class Receipt implements INotifySubject{
         this.observers.splice(observerIndex);
     }
 
-    notifyAllObserver(): void {
+    notifyAllObservers(message: string): { [key: string]: string } {
+        const result: { [key: string]: string } = {};
         for (const observer of this.observers) {
-            observer.send(`Receipt ID ${this.id} has been updated to ${this.status}`);
+            result[observer.getType()] = observer.send(message);
         }
+        return result;
     }
 }
 

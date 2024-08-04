@@ -15,7 +15,7 @@ class Booking implements INotifySubject {
     public totalPrice: number;
     public status: BookingStatus;
     public id?: number | null;
-    private observers: INotifyObserver[] = [];
+    private observers: Array<INotifyObserver> = [];
 
     private slotManager: SlotManager = SlotManager.getInstance()
 
@@ -101,6 +101,7 @@ class Booking implements INotifySubject {
             return false;
         }
     }
+
     attach(observer: INotifyObserver): void {
         this.observers.push(observer);
     }
@@ -110,10 +111,12 @@ class Booking implements INotifySubject {
         this.observers.splice(observerIndex);
     }
 
-    notifyAllObserver(): void {
+    notifyAllObservers(message: string): { [key: string]: string } {
+        const result: { [key: string]: string } = {};
         for (const observer of this.observers) {
-            observer.send('Booking ID ${this.bookingId} has been updated to ${this.status}');
+            result[observer.getType()] = observer.send(message);
         }
+        return result;
     }
 }
 
