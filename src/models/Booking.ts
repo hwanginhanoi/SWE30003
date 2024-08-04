@@ -60,7 +60,7 @@ class Booking implements INotifySubject {
         }
     }
 
-    static async getSlotById(id: number): Promise<Booking | Error> {
+    static async getBookingById(id: number): Promise<Booking | Error> {
         try {
             const booking = await prisma.booking.findUnique({
                 where: {id: id},
@@ -78,7 +78,7 @@ class Booking implements INotifySubject {
         }
     }
 
-    static async getSlotByUId(userId: number): Promise<Booking[] | Error> {
+    static async getBookingByUId(userId: number): Promise<Booking[] | Error> {
         try {
             const books = await prisma.booking.findMany({
                 where: {customerId: userId},

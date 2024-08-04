@@ -6,6 +6,7 @@ import SlotManager from "../models/SlotManager";
 import jwt from "jsonwebtoken";
 import Booking from "../models/Booking";
 import customer from "../models/Customer";
+import booking from "../models/Booking";
 
 const router = express.Router();
 
@@ -41,7 +42,7 @@ router.delete('/delete/:id', async (req, res) => {
         return;
     }
 
-    const booking = await Booking.getSlotById(bookingId)
+    const booking = await Booking.getBookingByUId(bookingId)
     if (booking instanceof Booking) {
         const result = await Booking.deleteBooking(booking)
         if (result === false) {
@@ -71,7 +72,7 @@ router.get('/update/:id', async (req, res) => {
         JSONResponse.serverError(req, res, 'Invalid booking ID', null);
         return;
     }
-    const booking = await Booking.getSlotById(bookingId)
+    const booking = await Booking.getBookingById(bookingId)
     if (booking instanceof Booking) {
         const result = await Booking.updateBooking(booking)
         if (result === false) {
@@ -101,8 +102,8 @@ router.get('/getByUId/:id', async (req, res) => {
         JSONResponse.serverError(req, res, 'User booking ID', null);
         return;
     }
-    const books = await Booking.getSlotByUId(userId)
-    if(books) {
+    const books = await Booking.getBookingByUId(userId)
+    if (books) {
         JSONResponse.success(req, res, 'Booking list:', books);
     } else {
         JSONResponse.serverError(req, res, 'Error update booking version 2', null);
@@ -121,8 +122,8 @@ router.get('/getById/:id', async (req, res) => {
         JSONResponse.serverError(req, res, 'User booking ID', null);
         return;
     }
-    const books = await Booking.getSlotById(bookingId)
-    if(books) {
+    const books = await Booking.getBookingById(bookingId)
+    if (books) {
         JSONResponse.success(req, res, 'Booking list:', books);
     } else {
         JSONResponse.serverError(req, res, 'Error update booking version 2', null);
