@@ -42,7 +42,7 @@ router.delete('/delete/:id', async (req, res) => {
         return;
     }
 
-    const booking = await Booking.getBookingByUId(bookingId)
+    const booking = await Booking.getBookingById(bookingId)
     if (booking instanceof Booking) {
         const result = await Booking.deleteBooking(booking)
         if (result === false) {
