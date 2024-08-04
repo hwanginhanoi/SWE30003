@@ -46,7 +46,7 @@ class Invoice {
         }
     }
 
-    static async getBookingByUId(userId: number): Promise<Invoice[] | Error> {
+    static async getInvoiceByUId(userId: number): Promise<Invoice[] | Error> {
         try {
             const bookings = await prisma.booking.findMany({
                 where: { customerId: userId },
