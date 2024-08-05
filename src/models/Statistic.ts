@@ -1,5 +1,6 @@
 import { PrismaClient,  BookingStatus, SlotType, SlotStatus, PaymentStatus, NotificationType } from '@prisma/client';
 
+const prisma = new PrismaClient();
 class Statistic {
     private prisma: PrismaClient;
 
@@ -7,20 +8,20 @@ class Statistic {
         this.prisma = new PrismaClient();
     }
 
-    async getTotalBookings(): Promise<number> {
-        const count = await this.prisma.booking.count();
+    static async getTotalBookings(): Promise<number> {
+        const count = await prisma.booking.count();
         return count;
     }
 
-    async getBookingsByStatus(status: BookingStatus): Promise<number> {
-        const count = await this.prisma.booking.count({
+    static async getBookingsByStatus(status: BookingStatus): Promise<number> {
+        const count = await prisma.booking.count({
             where: { status }
         });
         return count;
     }
 
-    async getSlotStatistics(): Promise<{ [key in SlotType]: { available: number, occupied: number, reserved: number } }> {
-        const slots = await this.prisma.parkingSlot.findMany({
+    static async getSlotStatistics(): Promise<{ [key in SlotType]: { available: number, occupied: number, reserved: number } }> {
+        const slots = await prisma.parkingSlot.findMany({
             select: {
                 type: true,
                 status: true
@@ -45,8 +46,8 @@ class Statistic {
         return stats;
     }
 
-    async getPaymentStatistics(): Promise<{ [key in PaymentStatus]: number }> {
-        const receipts = await this.prisma.receipt.findMany({
+    static async getPaymentStatistics(): Promise<{ [key in PaymentStatus]: number }> {
+        const receipts = await prisma.receipt.findMany({
             select: {
                 status: true
             }
@@ -65,8 +66,8 @@ class Statistic {
         return stats;
     }
 
-    async getNotificationStatistics(): Promise<{ [key in NotificationType]: number }> {
-        const notifications = await this.prisma.notification.findMany({
+    static async getNotificationStatistics(): Promise<{ [key in NotificationType]: number }> {
+        const notifications = await prisma.notification.findMany({
             select: {
                 type: true
             }
@@ -84,8 +85,8 @@ class Statistic {
         return stats;
     }
 
-    async getTotalRevenue(): Promise<number> {
-        const invoices = await this.prisma.invoice.findMany({
+    static async getTotalRevenue(): Promise<number> {
+        const invoices = await prisma.invoice.findMany({
             where: { status: PaymentStatus.Completed },
             select: { amount: true }
         });
