@@ -1,13 +1,8 @@
-import { PrismaClient,  BookingStatus, SlotType, SlotStatus, PaymentStatus, NotificationType } from '@prisma/client';
+import {PrismaClient, BookingStatus, SlotType, SlotStatus, PaymentStatus, NotificationType} from '@prisma/client';
 
 const prisma = new PrismaClient();
+
 class Statistic {
-    private prisma: PrismaClient;
-
-    constructor() {
-        this.prisma = new PrismaClient();
-    }
-
     static async getTotalBookings(): Promise<number> {
         const count = await prisma.booking.count();
         return count;
@@ -15,12 +10,18 @@ class Statistic {
 
     static async getBookingsByStatus(status: BookingStatus): Promise<number> {
         const count = await prisma.booking.count({
-            where: { status }
+            where: {status}
         });
         return count;
     }
 
-    static async getSlotStatistics(): Promise<{ [key in SlotType]: { available: number, occupied: number, reserved: number } }> {
+    static async getSlotStatistics(): Promise<{
+        [key in SlotType]: {
+            available: number,
+            occupied: number,
+            reserved: number
+        }
+    }> {
         const slots = await prisma.parkingSlot.findMany({
             select: {
                 type: true,
@@ -29,8 +30,8 @@ class Statistic {
         });
 
         const stats = {
-            [SlotType.Car]: { available: 0, occupied: 0, reserved: 0 },
-            [SlotType.Motorbike]: { available: 0, occupied: 0, reserved: 0 }
+            [SlotType.Car]: {available: 0, occupied: 0, reserved: 0},
+            [SlotType.Motorbike]: {available: 0, occupied: 0, reserved: 0}
         };
 
         slots.forEach(slot => {
@@ -87,8 +88,8 @@ class Statistic {
 
     static async getTotalRevenue(): Promise<number> {
         const invoices = await prisma.invoice.findMany({
-            where: { status: PaymentStatus.Completed },
-            select: { amount: true }
+            where: {status: PaymentStatus.Completed},
+            select: {amount: true}
         });
 
         const totalRevenue = invoices.reduce((total, invoice) => total + invoice.amount, 0);
