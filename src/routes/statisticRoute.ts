@@ -6,6 +6,8 @@ import SlotManager from "../models/SlotManager";
 import jwt from "jsonwebtoken";
 import Statistic from "../models/Statistic";
 import Receipt from "../models/Receipt";
+import Booking from "../models/Booking";
+import {BookingStatus} from "@prisma/client";
 
 const router = express.Router();
 
@@ -22,7 +24,8 @@ router.get('/totalBooking', async (req, res) => {
 router.get('/bookingByStatus/:status', async (req, res) => {
 
     const {status} = req.params
-    const countBooking = Statistic.getBookingsByStatus(status)
+
+    const countBooking = Statistic.getBookingsByStatus(status as BookingStatus)
     if (countBooking) {
         JSONResponse.success(req, res, "Total number booking by status: ", countBooking)
     } else {

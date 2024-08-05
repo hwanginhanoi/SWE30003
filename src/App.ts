@@ -7,6 +7,8 @@ import bookingRouter from './routes/bookingRoute';
 import paymentRouter from './routes/paymentRoute';
 import invoiceRouter from './routes/invoiceRoute';
 import receiptRoute from "./routes/receiptRoute";
+import statistic from "./models/Statistic";
+import statisticRoute from "./routes/statisticRoute";
 
 
 class App {
@@ -28,6 +30,7 @@ class App {
         this.express.use('/payment', paymentRouter);
         this.express.use('/receipt', receiptRoute);
         this.express.use('/invoice', invoiceRouter);
+        this.express.use('/statistic', statisticRoute);
     }
 
 }
