@@ -90,8 +90,8 @@ router.get('/delete/:id', async (req, res) => {
     }
 });
 
-router.get('/update/:id', async (req, res) => {
-    const {id} = req.params;
+router.post('/update', async (req, res) => {
+    const {id, type, status} = req.body
     if (!id) {
         JSONResponse.serverError(req, res, 'Parking slot ID is required', null);
         return;
@@ -103,7 +103,10 @@ router.get('/update/:id', async (req, res) => {
         return;
     }
     const slot = await SlotManager.getSlotById(slotId)
+
     if (slot instanceof ParkingSlot) {
+        slot.type = type
+        slot.status = status
         const result = await SlotManager.upsertParkingSlot(slot)
         if (!result) {
             JSONResponse.serverError(req, res, 'Error update booking', null);
