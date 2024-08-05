@@ -16,7 +16,6 @@ router.post('/process', async (req: Request, res: Response) => {
 
     const message: string = `Your payment successfully. `
     const pushNotification = new PushNotification()
-    const receipt = Receipt.getReceiptsByInvoiceId(invoiceId)
 
 
     if (!invoiceId) {
@@ -25,7 +24,8 @@ router.post('/process', async (req: Request, res: Response) => {
 
     try {
         await paymentService.processPayment(invoiceId, amount, method as PaymentMethod);
-
+        const receipt = await Receipt.getReceiptsByInvoiceId(invoiceId)
+        console.log(receipt)
         if (receipt instanceof Receipt) {
             receipt.attach(pushNotification);
 
@@ -42,6 +42,9 @@ router.post('/process', async (req: Request, res: Response) => {
 
             JSONResponse.success(req, res, 'Payment success', notificaion);
 
+        }
+        else {
+            JSONResponse.serverError(req, res, 'Failed ', null);
         }
     } catch (error) {
         console.error('Error processing payment:', error);

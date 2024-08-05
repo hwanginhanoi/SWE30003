@@ -48,14 +48,14 @@ router.post('/create', async (req, res) => {
     const result = await SlotManager.upsertParkingSlot(parkingSlot)
 
     if (!result) {
-        JSONResponse.serverError(req, res, 'Error create booking', null);
+        JSONResponse.serverError(req, res, 'Error create parking slot', null);
         return;
     } else {
         // const token = jwt.sign({ email: user.email }, 'secretKey123cutephomaique', {
         //     expiresIn: '1h',
         // });
         // const credentials = user.getJsonObject()
-        JSONResponse.success(req, res, 'Booking created', {});
+        JSONResponse.success(req, res, 'Parking slot created', {});
     }
 });
 
