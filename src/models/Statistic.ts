@@ -18,7 +18,7 @@ class Statistic {
     static async getBookingsByStatus(status: BookingStatus): Promise<number> {
         try {
             return await prisma.booking.count({
-                where: {status: BookingStatus.Pending}
+                where: {status: status}
             });
         } catch (error) {
             console.error("Error fetching bookings by status:", error);
