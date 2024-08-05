@@ -4,7 +4,7 @@ import Booking from "../../models/Booking";
 
 jest.mock("../../models/Booking");
 
-describe('POST /create/', () => {
+describe('Create Booking', () => {
     it('should respond with success message when booking is created', async () => {
         (Booking.insertBooking as jest.Mock).mockResolvedValue(true);
 
