@@ -13,7 +13,7 @@ const router = express.Router();
 
 router.get('/totalBooking', async (req, res) => {
 
-    const countBooking = Statistic.getTotalBookings()
+    const countBooking = await Statistic.getTotalBookings()
     if (countBooking) {
         JSONResponse.success(req, res, "Total number booking", countBooking)
     } else {
@@ -25,7 +25,7 @@ router.get('/bookingByStatus/:status', async (req, res) => {
 
     const {status} = req.params
 
-    const countBooking = Statistic.getBookingsByStatus(status as BookingStatus)
+    const countBooking = await Statistic.getBookingsByStatus(status as BookingStatus)
     if (countBooking) {
         JSONResponse.success(req, res, "Total number booking by status: ", countBooking)
     } else {
@@ -35,7 +35,7 @@ router.get('/bookingByStatus/:status', async (req, res) => {
 
 router.get('/slot', async (req, res) => {
 
-    const stats = Statistic.getSlotStatistics()
+    const stats = await Statistic.getSlotStatistics()
     if (stats) {
         JSONResponse.success(req, res, "Slot statistic: ", stats)
     } else {
@@ -45,7 +45,7 @@ router.get('/slot', async (req, res) => {
 
 router.get('/payment', async (req, res) => {
 
-    const stats = Statistic.getPaymentStatistics()
+    const stats = await Statistic.getPaymentStatistics()
     if (stats) {
         JSONResponse.success(req, res, "Payment statistic: ", stats)
     } else {
@@ -55,7 +55,7 @@ router.get('/payment', async (req, res) => {
 
 router.get('/notification', async (req, res) => {
 
-    const stats = Statistic.getNotificationStatistics()
+    const stats = await Statistic.getNotificationStatistics()
     if (stats) {
         JSONResponse.success(req, res, "Notification statistic: ", stats)
     } else {
@@ -64,7 +64,7 @@ router.get('/notification', async (req, res) => {
 });
 router.get('/revenue', async (req, res) => {
 
-    const stats = Statistic.getPaymentStatistics()
+    const stats = await Statistic.getPaymentStatistics()
     if (stats) {
         JSONResponse.success(req, res, "Revenue statistic: ", stats)
     } else {

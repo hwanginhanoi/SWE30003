@@ -1,4 +1,4 @@
-import {PrismaClient, BookingStatus, SlotType, SlotStatus, PaymentStatus, NotificationType} from '@prisma/client';
+import {BookingStatus, NotificationType, PaymentStatus, PrismaClient, SlotStatus, SlotType} from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -8,8 +8,7 @@ class Statistic {
 
     static async getTotalBookings(): Promise<number> {
         try {
-            const count = await prisma.booking.count();
-            return count;
+            return await prisma.booking.count();
         } catch (error) {
             console.error("Error fetching total bookings:", error);
             return 0; // Or handle the error as appropriate
@@ -18,10 +17,9 @@ class Statistic {
 
     static async getBookingsByStatus(status: BookingStatus): Promise<number> {
         try {
-            const count = await prisma.booking.count({
-                where: {status}
+            return await prisma.booking.count({
+                where: {status: BookingStatus.Pending}
             });
-            return count;
         } catch (error) {
             console.error("Error fetching bookings by status:", error);
             return 0;
