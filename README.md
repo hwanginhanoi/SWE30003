@@ -14,7 +14,7 @@ git clone https://github.com/hwanginhanoi/SWE30003.git
 ### 2. Install
 ```
 npm install
-primsa migrate dev --name init
+prisma migrate dev --name init
 docker-compose up -d
 npm run start
 ```
